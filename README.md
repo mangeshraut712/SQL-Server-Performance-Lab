@@ -1,147 +1,145 @@
-# 🚀 SQL Server Performance Lab 2025: Next-Gen Optimization
+# 🎓 SQL Server Performance Lab
 
-A world-class engineering laboratory designed for the **2025 SQL landscape**. This environment focuses on high-scale data engineering, **Intelligent Query Processing (IQP)**, and **ARM64-native** performance on modern Apple Silicon (M1/M2/M3) and Linux systems.
+**Learn SQL query optimization through hands-on exercises with measurable results.**
 
-![CI Status](https://github.com/mangeshraut712/SQL-Server-Performance-Lab/actions/workflows/ci.yml/badge.svg)
-![SQL Server 2022+](https://img.shields.io/badge/SQL_Server-2022%2F2025-0078D4?style=for-the-badge&logo=microsoft-sql-server)
-![Performance](https://img.shields.io/badge/Optimization-Next--Gen_IQP-FFD700?style=for-the-badge)
-![Platform](https://img.shields.io/badge/Arch-ARM64_Native-white?style=for-the-badge&logo=arm)
-![Docker](https://img.shields.io/badge/Container-Docker_Compose_v2-2496ED?style=for-the-badge&logo=docker)
-![Version](https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge)
+This lab contains 750,000+ rows of test data and 6 real-world performance scenarios. Run the "bad" queries, analyze them, apply fixes, and see the improvement.
 
 ---
 
-## ⚡ 2025 Tech Stack & Advancements
+## 📋 What You'll Learn
 
-This lab is built using the latest advancements in the Microsoft Data Platform:
-
-*   **Intelligent Query Processing (IQP) Next-Gen**: Leveraging SQL Server 2022+ capabilities like *Cardinality Estimation Feedback* and *Memory Grant Feedback*.
-*   **ARM64 Native Virtualization**: Fully optimized for Apple Silicon via `azure-sql-edge` and high-performance Docker virtualization.
-*   **Columnstore Batch Mode**: Massive data aggregation performance using the latest Batch Mode on Rowstore technology.
-*   **Azure Data Studio + Copilot**: Recommended workflow utilizing AI-assisted query analysis and visual execution plans.
-
----
-
-## 🎯 Laboratory Modules
-
-Discover how to solve the most complex performance bottlenecks in modern database engineering.
-
-| Module | 2025 Trend | Technical Fix | Results |
-| :--- | :--- | :--- | :--- |
-| **A. Slow Search** | **SARGability** | Wildcard Removal & Covering Indexes | **560x 🚀** |
-| **B. Data Locality** | **I/O Overhead** | Key Lookup Elimination via INCLUDE | **50x 🚀** |
-| **C. Plan Stability** | **CE Feedback** | Parameter Sniffing & RECOMPILE | **Stable** |
-| **D. Concurrency** | **Isolation Levels** | Consistent Lock Ordering | **No Deadlocks** |
-| **E. Analytical Scale** | **Columnar Power** | Non-Clustered Columnstore Indexes | **100x 🚀** |
-| **F. Time-Travel Data** | **Temporal Tables** | System-Versioned Historical Tracking | **Zero Code** |
+| Module | Topic | What You'll Master |
+|--------|-------|-------------------|
+| **A** | Slow Search Patterns | Why `LIKE '%text%'` kills performance |
+| **B** | Covering Indexes | How to eliminate expensive Key Lookups |
+| **C** | Parameter Sniffing | Why the same query runs fast AND slow |
+| **D** | Deadlocks | How concurrent transactions block each other |
+| **E** | Columnstore Indexes | Massive speedups for analytical queries |
+| **F** | Temporal Tables | Automatic historical data tracking |
 
 ---
 
-## 🛠️ One-Command Infrastructure (Docker v2)
+## 🚀 Quick Start
 
-Spin up a production-grade playground in seconds. Optimized for **M1/M2/M3 Ultra** and **Ryzen/Intel ARM** environments.
+### Step 1: Start SQL Server
 
+**Using Docker (Mac/Linux/Windows):**
 ```bash
-# Start the lab
 docker-compose up -d
-
-# Verify Container
-docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 ```
 
----
+**Connection Details:**
+- Server: `localhost,1433`
+- Username: `sa`
+- Password: `YourStrong@Pass123`
 
-## 🧪 Automated Benchmarking
+### Step 2: Create the Database
 
-This lab includes a proprietary **Performance Command Center**. Do not just "feel" the speed—measure it.
+Open Azure Data Studio or SSMS and run these files **in order**:
+
+1. `db/01-schema.sql` - Creates tables
+2. `db/02-seed-data.sql` - Generates 750K+ rows (~2 minutes)
+3. `db/03-indexes.sql` - Creates indexes
+4. `db/04-stored-procedures.sql` - Creates helper procedures
+
+### Step 3: Verify Setup
 
 ```sql
--- Run the global verification suite
-EXEC [dbo].[usp_RunAllTests];
+USE PerformanceLab;
 
--- View the Premium Performance Dashboard
-EXEC [dbo].[usp_ViewDashboard];
+SELECT 'Customers' AS TableName, COUNT(*) AS Rows FROM dbo.Customers
+UNION ALL SELECT 'Orders', COUNT(*) FROM dbo.Orders
+UNION ALL SELECT 'OrderDetails', COUNT(*) FROM dbo.OrderDetails
+UNION ALL SELECT 'Products', COUNT(*) FROM dbo.Products;
 ```
+
+**Expected:** ~750,000 total rows
+
+### Step 4: Run the Tests
+
+Execute `RUN-ALL-TESTS.sql` to verify all modules work correctly.
 
 ---
 
-## 🛠️ Developer Tools & Automation
+## 📂 Project Structure
 
-### **Makefile Commands** (macOS/Linux)
-```bash
-make help        # Show all available commands
-make setup       # Start Docker container
-make init        # Initialize database (all 4 setup scripts)
-make test        # Run automated test suite
-make dashboard   # View performance results
-make clean       # Reset everything
 ```
-
-### **Python Visualization** (Portfolio Charts)
-Generate professional performance charts from your results:
-```bash
-pip install -r requirements.txt
-python scripts/visualize_results.py
-```
-
-### **CI/CD Pipeline** (GitHub Actions)
-Automated testing runs on every push to validate:
-- ✅ Database schema creation
-- ✅ Data seeding (750K+ rows)
-- ✅ All performance tests passing
-
----
-
-## 📁 Engineering Architecture
-
-```text
 sqlserver-performance-lab/
-├── 🐋 docker-compose.yml       # M1/M2/M3 Optimized Virtualization
-├── ⚙️  Makefile                 # One-Command Developer Workflow
-├── 🤖 .github/workflows/ci.yml # Automated CI/CD Testing
-├── 🧪 RUN-ALL-TESTS.sql        # Automated Performance Verification
-├── 📒 WORKBOOK.md              # Engineering Lab Reflections
-├── 📸 SCREENSHOT-GUIDE.md      # Portfolio Capture Instructions
-├── 📂 db/                      # Core Setup Engine (v2.5)
-│   ├── 01-schema.sql           # Modern Relational Design
-│   ├── 02-seed-data.sql        # 750K+ Row Synthetic Generator
-│   └── 04-stored-procedures.sql # IQP-Enabled Procedures
-├── 📂 scripts/                 # Automation & Visualization
-│   └── visualize_results.py    # Performance Chart Generator
-└── 📂 modules/                 # Optimization Deep-Dives (6 Total)
-    ├── A-slow-search/          # Search Patterns
-    ├── B-covering-index/       # Data Access Pathing
-    ├── C-parameter-sniffing/   # Plan Cache Engineering
-    ├── D-deadlock-demo/        # Transaction Concurrency
-    ├── E-columnstore-power/    # Analytical Batch Processing
-    └── F-temporal-tables/      # Time-Travel Query (SQL 2022+)
+│
+├── db/                              # Database Setup
+│   ├── 01-schema.sql               # Table definitions
+│   ├── 02-seed-data.sql            # Test data (750K+ rows)
+│   ├── 03-indexes.sql              # Index definitions
+│   └── 04-stored-procedures.sql    # Helper procedures
+│
+├── modules/                         # Learning Labs
+│   ├── A-slow-search/              # Search pattern optimization
+│   ├── B-covering-index/           # Key lookup elimination
+│   ├── C-parameter-sniffing/       # Plan cache issues
+│   ├── D-deadlock-demo/            # Concurrency problems
+│   ├── E-columnstore-power/        # Analytical queries
+│   └── F-temporal-tables/          # Historical tracking
+│
+├── docker-compose.yml              # One-command SQL Server setup
+├── RUN-ALL-TESTS.sql               # Automated verification
+└── README.md                       # This file
 ```
 
 ---
 
-## 📊 2025 Performance KPI Matrix
+## 🧪 How to Use Each Module
 
-| Metric | Goal | Tool Used |
-| :--- | :--- | :--- |
-| **Logical Reads** | Minimal Page Touches | `SET STATISTICS IO ON` |
-| **Execution Mode** | Batch (where possible) | Execution Plan Analysis |
-| **Wait Stats** | Low Contention | `sys.dm_os_wait_stats` |
-| **Plan Reuse** | Optimized Specificity | Query Store / Procedure Cache |
+Each module folder contains:
+- `README.md` - Explains the problem and expected results
+- `01-bad-query.sql` - The slow/problematic query
+- `02-analysis.sql` - Why it's slow (optional)
+- `03-fix.sql` - The optimized solution
+
+### Recommended Workflow
+
+1. **Read the README** - Understand the problem
+2. **Run the bad query** - Note the logical reads and time
+3. **Analyze** - Look at the execution plan
+4. **Apply the fix** - Run the optimized version
+5. **Compare** - See the improvement
+
+### How to Measure Performance
+
+Always enable statistics before running queries:
+
+```sql
+SET STATISTICS IO ON;   -- Shows logical reads
+SET STATISTICS TIME ON; -- Shows execution time
+```
+
+**Key Metric:** `logical reads` - Lower is better!
 
 ---
 
-## 💼 Portfolio Integration
+## 📊 Expected Results
 
-This project is a dedicated showcase for:
-*   **Database Reliability Engineers (SRE)**
-*   **Lead Data Architects**
-*   **SQL Performance Consultants**
-
-**Step 1:** Run the labs.  
-**Step 2:** Capture the **700x speedup** metrics.  
-**Step 3:** Document your "Before/After" execution plans.  
-**Step 4:** Deploy your knowledge.
+| Module | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| A: Slow Search | ~700 reads | ~6 reads | **100x faster** |
+| B: Covering Index | ~5,000 reads | ~100 reads | **50x faster** |
+| E: Columnstore | ~45,000 reads | ~800 reads | **56x faster** |
 
 ---
 
-**Generated by Antigravity AI** | *Pushing the limits of SQL Performance.*
+## 🔧 Requirements
+
+- **SQL Server 2019+** (or Azure SQL Edge for Mac)
+- **Azure Data Studio** or **SSMS**
+- **Docker** (optional, for easy setup)
+
+---
+
+## 📖 Additional Resources
+
+- [Microsoft Docs: Query Performance](https://docs.microsoft.com/sql/relational-databases/performance/)
+- [Brent Ozar: SQL Server Training](https://www.brentozar.com/)
+- [SQL Server Execution Plans](https://docs.microsoft.com/sql/relational-databases/performance/execution-plans/)
+
+---
+
+**Happy Learning! 🎓**
