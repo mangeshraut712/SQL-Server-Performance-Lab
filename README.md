@@ -2,10 +2,12 @@
 
 A world-class engineering laboratory designed for the **2025 SQL landscape**. This environment focuses on high-scale data engineering, **Intelligent Query Processing (IQP)**, and **ARM64-native** performance on modern Apple Silicon (M1/M2/M3) and Linux systems.
 
+![CI Status](https://github.com/mangeshraut712/SQL-Server-Performance-Lab/actions/workflows/ci.yml/badge.svg)
 ![SQL Server 2022+](https://img.shields.io/badge/SQL_Server-2022%2F2025-0078D4?style=for-the-badge&logo=microsoft-sql-server)
 ![Performance](https://img.shields.io/badge/Optimization-Next--Gen_IQP-FFD700?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Arch-ARM64_Native-white?style=for-the-badge&logo=arm)
 ![Docker](https://img.shields.io/badge/Container-Docker_Compose_v2-2496ED?style=for-the-badge&logo=docker)
+![Version](https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge)
 
 ---
 
