@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  sql-server:
+    container_name: sqlserver-lab
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    platform: linux/arm64
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong@Pass123
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    restart: always
+
+volumes:
+  sql-data:
+    driver: local
