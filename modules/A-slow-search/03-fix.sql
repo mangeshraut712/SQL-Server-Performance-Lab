@@ -163,18 +163,108 @@ FROM dbo.Customers
 WHERE Email LIKE 'john%';
 GO
 
+
+--------------------------------------------------------------------------------
+-- FIX #4b: Full-Text Search (Enterprise Solution)
+--------------------------------------------------------------------------------
 /*
-If you truly need substring search across multiple columns,
-implement Full-Text Search:
+Full-Text Search is the BEST solution for complex text searching.
+It provides linguistic search, ranking, and excellent performance.
+*/
 
-CREATE FULLTEXT CATALOG CustomerCatalog AS DEFAULT;
+PRINT '=== FIX #4b: Full-Text Search Implementation ===';
+GO
 
-CREATE FULLTEXT INDEX ON dbo.Customers (
-    FirstName, LastName, Email
-) KEY INDEX PK_Customers;
+-- Step 1: Create Full-Text Catalog (one per database)
+IF NOT EXISTS (SELECT * FROM sys.fulltext_catalogs WHERE name = 'CustomerCatalog')
+BEGIN
+    CREATE FULLTEXT CATALOG CustomerCatalog AS DEFAULT;
+    PRINT 'Full-Text Catalog created.';
+END
+ELSE
+BEGIN
+    PRINT 'Full-Text Catalog already exists.';
+END
+GO
 
-Then: SELECT * FROM dbo.Customers 
-      WHERE CONTAINS((FirstName, LastName, Email), 'john');
+-- Step 2: Create Full-Text Index on Customers table
+IF NOT EXISTS (
+    SELECT * FROM sys.fulltext_indexes 
+    WHERE object_id = OBJECT_ID('dbo.Customers')
+)
+BEGIN
+    CREATE FULLTEXT INDEX ON dbo.Customers (
+        FirstName LANGUAGE 1033,  -- English
+        LastName LANGUAGE 1033,
+        Email LANGUAGE 1033,
+        Notes LANGUAGE 1033
+    ) 
+    KEY INDEX PK__Customer__A4AE64B8F1F8C8D1  -- Your actual PK name
+    ON CustomerCatalog
+    WITH CHANGE_TRACKING AUTO;
+    
+    PRINT 'Full-Text Index created on Customers table.';
+    PRINT 'Waiting for initial population...';
+    
+    -- Wait for index to populate
+    WAITFOR DELAY '00:00:05';
+END
+ELSE
+BEGIN
+    PRINT 'Full-Text Index already exists.';
+END
+GO
+
+-- Step 3: Use CONTAINS for full-text search
+EXEC dbo.usp_ClearCache;
+GO
+
+PRINT 'Running Full-Text Search query:';
+
+-- Search for "smith" in any indexed column
+SELECT CustomerID, FirstName, LastName, Email, Notes
+FROM dbo.Customers
+WHERE CONTAINS((FirstName, LastName, Email), 'smith');
+GO
+
+-- Advanced: Search with wildcards (prefix matching)
+SELECT CustomerID, FirstName, LastName, Email
+FROM dbo.Customers
+WHERE CONTAINS((FirstName, LastName, Email), '"john*"');
+GO
+
+-- Advanced: Search with proximity (words near each other)
+SELECT CustomerID, FirstName, LastName, Email, Notes
+FROM dbo.Customers
+WHERE CONTAINS(Notes, 'NEAR((important, customer), 5)');
+GO
+
+-- Advanced: Search with ranking (FREETEXTTABLE)
+SELECT 
+    c.CustomerID,
+    c.FirstName,
+    c.LastName,
+    c.Email,
+    ft.RANK AS SearchRelevance
+FROM dbo.Customers c
+JOIN FREETEXTTABLE(dbo.Customers, (FirstName, LastName, Email), 'john smith') ft
+    ON c.CustomerID = ft.[KEY]
+ORDER BY ft.RANK DESC;
+GO
+
+/*
+Full-Text Search Benefits:
+✅ Linguistic search (word forms, synonyms)
+✅ Proximity searches
+✅ Relevance ranking
+✅ Excellent performance on large text
+✅ No need for leading wildcards
+
+Perfect for:
+- Product catalogs
+- Customer search
+- Document management
+- Knowledge bases
 */
 
 
