@@ -35,6 +35,8 @@ This lab demonstrates four critical SQL Server performance scenarios:
 
 ## 🚀 Quick Start
 
+> **New to this project?** 👉 Read **[QUICKSTART-GUIDE.md](QUICKSTART-GUIDE.md)** for complete step-by-step instructions from installation to running your first optimization!
+
 ### Step 1: Create the Database and Schema
 
 Open SSMS or Azure Data Studio and execute:
