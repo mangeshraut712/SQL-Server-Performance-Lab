@@ -82,6 +82,7 @@ ProductBase AS (
         ROW_NUMBER() OVER (ORDER BY c.CategoryName, cs.SubCategory, n.n) AS RowNum,
         c.CategoryName,
         cs.SubCategory,
+        cs.SubCatNum,
         n.n AS ProductNum
     FROM @Categories c
     CROSS JOIN CategorySplit cs
