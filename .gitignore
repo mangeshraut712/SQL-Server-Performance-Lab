@@ -1,0 +1,32 @@
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+*.bak
+*.trn
+
+# SSMS settings
+*.ssmssln
+*.ssmssqlproj
+
+# Azure Data Studio
+.azuredatastudio/
+
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
