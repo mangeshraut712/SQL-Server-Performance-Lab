@@ -1,0 +1,66 @@
+name: SQL Performance Lab CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/azure-sql-edge:latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: YourStrong@Pass123
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -Q 'SELECT 1' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Wait for SQL Server
+      run: sleep 15
+
+    - name: Install SQL Tools
+      run: |
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+        sudo apt-get update
+        sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+
+    - name: Run Schema Setup
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -i db/01-schema.sql
+
+    - name: Run Data Seed
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -i db/02-seed-data.sql
+
+    - name: Run Index Creation
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -i db/03-indexes.sql
+
+    - name: Run Stored Procedures
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -i db/04-stored-procedures.sql
+
+    - name: Validate Row Counts
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -Q "USE PerformanceLab; SELECT 'Customers' as TableName, COUNT(*) as RowCount FROM dbo.Customers UNION ALL SELECT 'Orders', COUNT(*) FROM dbo.Orders UNION ALL SELECT 'OrderDetails', COUNT(*) FROM dbo.OrderDetails"
+
+    - name: Run Automated Tests
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Pass123 -i RUN-ALL-TESTS.sql
+
+    - name: Success Notification
+      run: echo "✅ All SQL Performance Lab tests passed!"

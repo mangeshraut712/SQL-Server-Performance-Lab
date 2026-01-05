@@ -31,6 +31,7 @@ Discover how to solve the most complex performance bottlenecks in modern databas
 | **C. Plan Stability** | **CE Feedback** | Parameter Sniffing & RECOMPILE | **Stable** |
 | **D. Concurrency** | **Isolation Levels** | Consistent Lock Ordering | **No Deadlocks** |
 | **E. Analytical Scale** | **Columnar Power** | Non-Clustered Columnstore Indexes | **100x 🚀** |
+| **F. Time-Travel Data** | **Temporal Tables** | System-Versioned Historical Tracking | **Zero Code** |
 
 ---
 
@@ -62,23 +63,56 @@ EXEC [dbo].[usp_ViewDashboard];
 
 ---
 
+## 🛠️ Developer Tools & Automation
+
+### **Makefile Commands** (macOS/Linux)
+```bash
+make help        # Show all available commands
+make setup       # Start Docker container
+make init        # Initialize database (all 4 setup scripts)
+make test        # Run automated test suite
+make dashboard   # View performance results
+make clean       # Reset everything
+```
+
+### **Python Visualization** (Portfolio Charts)
+Generate professional performance charts from your results:
+```bash
+pip install -r requirements.txt
+python scripts/visualize_results.py
+```
+
+### **CI/CD Pipeline** (GitHub Actions)
+Automated testing runs on every push to validate:
+- ✅ Database schema creation
+- ✅ Data seeding (750K+ rows)
+- ✅ All performance tests passing
+
+---
+
 ## 📁 Engineering Architecture
 
 ```text
 sqlserver-performance-lab/
 ├── 🐋 docker-compose.yml       # M1/M2/M3 Optimized Virtualization
+├── ⚙️  Makefile                 # One-Command Developer Workflow
+├── 🤖 .github/workflows/ci.yml # Automated CI/CD Testing
 ├── 🧪 RUN-ALL-TESTS.sql        # Automated Performance Verification
 ├── 📒 WORKBOOK.md              # Engineering Lab Reflections
+├── 📸 SCREENSHOT-GUIDE.md      # Portfolio Capture Instructions
 ├── 📂 db/                      # Core Setup Engine (v2.5)
 │   ├── 01-schema.sql           # Modern Relational Design
 │   ├── 02-seed-data.sql        # 750K+ Row Synthetic Generator
 │   └── 04-stored-procedures.sql # IQP-Enabled Procedures
-└── 📂 modules/                 # Optimization Deep-Dives
+├── 📂 scripts/                 # Automation & Visualization
+│   └── visualize_results.py    # Performance Chart Generator
+└── 📂 modules/                 # Optimization Deep-Dives (6 Total)
     ├── A-slow-search/          # Search Patterns
     ├── B-covering-index/       # Data Access Pathing
     ├── C-parameter-sniffing/   # Plan Cache Engineering
     ├── D-deadlock-demo/        # Transaction Concurrency
-    └── E-columnstore-power/    # Analytical Batch Processing
+    ├── E-columnstore-power/    # Analytical Batch Processing
+    └── F-temporal-tables/      # Time-Travel Query (SQL 2022+)
 ```
 
 ---
