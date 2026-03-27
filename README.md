@@ -143,3 +143,20 @@ SET STATISTICS TIME ON; -- Shows execution time
 ---
 
 **Happy Learning! 🎓**
+
+---
+
+<!-- codex:project-diagram:start -->
+
+## Project Diagram
+
+```mermaid
+flowchart LR
+    A["Schema"] --> B["Queries"]
+    B --> C["Performance Tests"]
+    C --> D["Findings"]
+```
+
+_Lab workflow from schema setup to performance investigation._
+
+<!-- codex:project-diagram:end -->
