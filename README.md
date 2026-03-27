@@ -1,145 +1,101 @@
+<div align="center">
+
 # 🎓 SQL Server Performance Lab
 
-**Learn SQL query optimization through hands-on exercises with measurable results.**
+### Learn SQL tuning through six hands-on scenarios, 750K+ rows of data, and measurable before/after results
 
-This lab contains 750,000+ rows of test data and 6 real-world performance scenarios. Run the "bad" queries, analyze them, apply fixes, and see the improvement.
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
+[![SQL Server](https://img.shields.io/badge/SQL_Server-2019%2B-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/sql-server)
+[![T-SQL](https://img.shields.io/badge/T--SQL-Performance_Lab-0078D4?style=for-the-badge)](https://learn.microsoft.com/sql/t-sql/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
----
+[Features](#-features) • [Stack](#-stack) • [Quick Start](#-quick-start) • [Structure](#-project-structure) • [Scripts](#-scripts) • [License](#-license) • [Contact](#-contact)
 
-## 📋 What You'll Learn
-
-| Module | Topic | What You'll Master |
-|--------|-------|-------------------|
-| **A** | Slow Search Patterns | Why `LIKE '%text%'` kills performance |
-| **B** | Covering Indexes | How to eliminate expensive Key Lookups |
-| **C** | Parameter Sniffing | Why the same query runs fast AND slow |
-| **D** | Deadlocks | How concurrent transactions block each other |
-| **E** | Columnstore Indexes | Massive speedups for analytical queries |
-| **F** | Temporal Tables | Automatic historical data tracking |
+</div>
 
 ---
 
-## 🚀 Quick Start
+## Table of Contents
 
-### Step 1: Start SQL Server
+- [About](#-about)
+- [Features](#-features)
+- [Stack](#-stack)
+- [Quick Start](#-quick-start)
+- [Project Structure](#-project-structure)
+- [Scripts](#-scripts)
+- [License](#-license)
+- [Contact](#-contact)
 
-**Using Docker (Mac/Linux/Windows):**
+## About
+
+SQL Server Performance Lab is a guided tuning sandbox for learning how query shape, indexes, parameters, and concurrency affect execution plans. Each module pairs a slow query with an optimized fix so you can measure the improvement in logical reads and runtime.
+
+## Features
+
+- Six focused modules covering search patterns, covering indexes, parameter sniffing, deadlocks, columnstore indexes, and temporal tables
+- 750K+ rows of seeded test data for realistic tuning exercises
+- Step-by-step setup instructions in `HOW-TO-RUN.md`
+- Repeatable validation with `RUN-ALL-TESTS.sql`
+- Practical measurement workflow using `SET STATISTICS IO/TIME ON`
+
+## Stack
+
+| Area | Technologies |
+| --- | --- |
+| Database | SQL Server 2019+, T-SQL |
+| Local Environment | Docker Compose |
+| Clients | Azure Data Studio, SSMS |
+| Docs | Markdown guides and SQL scripts |
+
+## Quick Start
+
 ```bash
 docker-compose up -d
 ```
 
-**Connection Details:**
-- Server: `localhost,1433`
-- Username: `sa`
-- Password: `YourStrong@Pass123`
+Connect with `sa` / `YourStrong@Pass123`, then run the SQL files in order:
 
-### Step 2: Create the Database
+1. `db/01-schema.sql`
+2. `db/02-seed-data.sql`
+3. `db/03-indexes.sql`
+4. `db/04-stored-procedures.sql`
 
-Open Azure Data Studio or SSMS and run these files **in order**:
+After that, open `RUN-ALL-TESTS.sql` and execute it in Azure Data Studio or SSMS.
 
-1. `db/01-schema.sql` - Creates tables
-2. `db/02-seed-data.sql` - Generates 750K+ rows (~2 minutes)
-3. `db/03-indexes.sql` - Creates indexes
-4. `db/04-stored-procedures.sql` - Creates helper procedures
+## Project Structure
 
-### Step 3: Verify Setup
+```text
+sql-server-performance-lab/
+├── db/                    # Schema, seed data, indexes, procedures
+├── modules/               # Module A-F learning scenarios
+├── RUN-ALL-TESTS.sql      # End-to-end validation script
+├── HOW-TO-RUN.md          # Full setup walkthrough
+├── docker-compose.yml     # SQL Server container stack
+└── README.md              # Project overview
+```
+
+## Scripts
+
+The main commands and files you will use are:
+
+```bash
+docker-compose up -d
+docker-compose down
+docker-compose down -v
+```
 
 ```sql
-USE PerformanceLab;
-
-SELECT 'Customers' AS TableName, COUNT(*) AS Rows FROM dbo.Customers
-UNION ALL SELECT 'Orders', COUNT(*) FROM dbo.Orders
-UNION ALL SELECT 'OrderDetails', COUNT(*) FROM dbo.OrderDetails
-UNION ALL SELECT 'Products', COUNT(*) FROM dbo.Products;
+SET STATISTICS IO ON;
+SET STATISTICS TIME ON;
 ```
 
-**Expected:** ~750,000 total rows
+Use the module-specific `01-bad-query.sql`, `02-analysis.sql`, and `03-fix.sql` files to compare the baseline and optimized versions.
 
-### Step 4: Run the Tests
+## License
 
-Execute `RUN-ALL-TESTS.sql` to verify all modules work correctly.
+MIT. See [LICENSE](LICENSE) for details.
 
----
+## Contact
 
-## 📂 Project Structure
-
-```
-sqlserver-performance-lab/
-│
-├── db/                              # Database Setup
-│   ├── 01-schema.sql               # Table definitions
-│   ├── 02-seed-data.sql            # Test data (750K+ rows)
-│   ├── 03-indexes.sql              # Index definitions
-│   └── 04-stored-procedures.sql    # Helper procedures
-│
-├── modules/                         # Learning Labs
-│   ├── A-slow-search/              # Search pattern optimization
-│   ├── B-covering-index/           # Key lookup elimination
-│   ├── C-parameter-sniffing/       # Plan cache issues
-│   ├── D-deadlock-demo/            # Concurrency problems
-│   ├── E-columnstore-power/        # Analytical queries
-│   └── F-temporal-tables/          # Historical tracking
-│
-├── docker-compose.yml              # One-command SQL Server setup
-├── RUN-ALL-TESTS.sql               # Automated verification
-└── README.md                       # This file
-```
-
----
-
-## 🧪 How to Use Each Module
-
-Each module folder contains:
-- `README.md` - Explains the problem and expected results
-- `01-bad-query.sql` - The slow/problematic query
-- `02-analysis.sql` - Why it's slow (optional)
-- `03-fix.sql` - The optimized solution
-
-### Recommended Workflow
-
-1. **Read the README** - Understand the problem
-2. **Run the bad query** - Note the logical reads and time
-3. **Analyze** - Look at the execution plan
-4. **Apply the fix** - Run the optimized version
-5. **Compare** - See the improvement
-
-### How to Measure Performance
-
-Always enable statistics before running queries:
-
-```sql
-SET STATISTICS IO ON;   -- Shows logical reads
-SET STATISTICS TIME ON; -- Shows execution time
-```
-
-**Key Metric:** `logical reads` - Lower is better!
-
----
-
-## 📊 Expected Results
-
-| Module | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| A: Slow Search | ~700 reads | ~6 reads | **100x faster** |
-| B: Covering Index | ~5,000 reads | ~100 reads | **50x faster** |
-| E: Columnstore | ~45,000 reads | ~800 reads | **56x faster** |
-
----
-
-## 🔧 Requirements
-
-- **SQL Server 2019+** (or Azure SQL Edge for Mac)
-- **Azure Data Studio** or **SSMS**
-- **Docker** (optional, for easy setup)
-
----
-
-## 📖 Additional Resources
-
-- [Microsoft Docs: Query Performance](https://docs.microsoft.com/sql/relational-databases/performance/)
-- [Brent Ozar: SQL Server Training](https://www.brentozar.com/)
-- [SQL Server Execution Plans](https://docs.microsoft.com/sql/relational-databases/performance/execution-plans/)
-
----
-
-**Happy Learning! 🎓**
+- Repository: [mangeshraut712/SQL-Server-Performance-Lab](https://github.com/mangeshraut712/SQL-Server-Performance-Lab)
+- Issues: open a GitHub issue in this repository
